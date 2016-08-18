@@ -1,0 +1,16 @@
+{
+	"manifest_version": 2,
+	"name": "reCaptcha Collector",
+	"version": "1.0",
+	"description": "Collects data for training a neural network to solve reCaptcha",
+	"icons": {
+		"48": "icons/border-48.png"
+	},
+	"content_scripts": [
+		{
+			"matches": ["*://www.google.com/recaptcha/api2/frame*"],
+			"all_frames": true,
+			"js": ["detector.js"]
+		}
+	]
+}
