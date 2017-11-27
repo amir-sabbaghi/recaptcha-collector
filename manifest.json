@@ -6,8 +6,8 @@
 	"icons": {
 		"48": "icons/border-48.png"
 	},
-	"premissions": [
 		"http://localhost:12345",
+	"permissions": [
 		"webRequest"
 	],
 	"content_scripts": [
