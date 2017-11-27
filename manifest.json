@@ -6,9 +6,13 @@
 	"icons": {
 		"48": "icons/border-48.png"
 	},
+	"premissions": [
+		"http://localhost:12345",
+		"webRequest"
+	],
 	"content_scripts": [
 		{
-			"matches": ["*://www.google.com/recaptcha/api2/frame*"],
+			"matches": ["*://www.google.com/recaptcha/api2/bframe*"],
 			"all_frames": true,
 			"js": ["detector.js"]
 		}
