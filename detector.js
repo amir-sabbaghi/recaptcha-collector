@@ -26,8 +26,10 @@ document.addEventListener('mousedown', function (e) {
 	let image = new Image();
 	image.src = img[0].src;
 	let c = cropImage(image, l * w / 100, t * h / 100, w, h);
-	console.log(c);
-	let req = fetch('http://localhost:12345/' + label, { method: 'POST', body: c});
+	let body = { label: label,
+				 image: c,
+				 answer: true };
+	let req = fetch('http://localhost:12345/', { method: 'POST', body: JSON.stringify(body)});
 	req.then(function (res) {
 		if (res.ok)
 			console.log('sent successfully');
