@@ -27,15 +27,13 @@ document.addEventListener('mousedown', function (e) {
 	image.src = img[0].src;
 	let c = cropImage(image, l * w / 100, t * h / 100, w, h);
 	console.log(c);
-	req = new XMLHttpRequest();
-	req.open('POST', 'http://localhost:12345', true);
-	req.onreadystatechanged = function () {
-		if (req.readyState == XMLHttpRequest.DONE && req.status == 200)
+	let req = fetch('http://localhost:12345/' + label, { method: 'POST', body: c});
+	req.then(function (res) {
+		if (res.ok)
 			console.log('sent successfully');
 		else
-			console.log('failed to send request');
-	}
-	req.send(c);
+			console.log('failed to send data');
+	});
 }, false);
 
 function detectLabel() {
