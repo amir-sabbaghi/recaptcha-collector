@@ -1,13 +1,24 @@
 var label = null;
 
 document.addEventListener('mousedown', function (e) {
+	if (e.target.id == 'recaptcha-verify-button')
+		sendTheRest();
+	else {
+		if (isCheckbox())
+			console.log('check box');
+		else
+			sendSingle(e.target, true);
+	}
+}, false);
+
+function sendSingle(n, an) {
 	let label = detectLabel();
 	if (label == null) {
 		console.log('label not found');
 		return;
 	}
 	console.log('label is ' + label);
-	let d = e.target.parentNode;
+	let d = n.parentNode;
 	if (d.className != 'rc-image-tile-wrapper') {
 		console.log('not a tile');
 		return;
@@ -28,15 +39,34 @@ document.addEventListener('mousedown', function (e) {
 	let c = cropImage(image, l * w / 100, t * h / 100, w, h);
 	let body = { label: label,
 				 image: c,
-				 answer: true };
 	let req = fetch('http://localhost:12345/', { method: 'POST', body: JSON.stringify(body)});
+				 answer: an };
 	req.then(function (res) {
 		if (res.ok)
 			console.log('sent successfully');
 		else
 			console.log('failed to send data');
 	});
-}, false);
+	req.catch(function (e) {
+		console.log('failed to send request ' + e);
+	});
+}
+
+function sendTheRest() {
+	for (var d of document.querySelectorAll('.rc-imageselect-tile')) {
+		var img = d.querySelectorAll('img');
+		if (img.length == 0) {
+			console.log('img not found in tile!');
+			continue;
+		}
+		if (d.className == 'rc-imageselect-tile rc-imageselect-tileselected') {
+			sendSingle(img[0], true);
+		}
+		else if (d.className == 'rc-imageselect-tile') {
+			sendSingle(img[0], false);
+		}
+	}
+}
 
 function detectLabel() {
 	var d = document.querySelectorAll('.rc-imageselect-desc');
@@ -56,6 +86,13 @@ function detectLabel() {
 		}
 	}
 	return null;
+}
+
+function isCheckbox() {
+	var d = document.querySelectorAll('.rc-imageselect-carousel-instructions');
+	if (d.length == 0)
+		return false;
+	return true;
 }
 
 function cropImage(image, top, left, width, height) {
