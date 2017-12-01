@@ -4,7 +4,7 @@
 	"version": "1.0",
 	"description": "Collects data for training a neural network to solve reCaptcha",
 	"icons": {
-		"48": "icons/border-48.png"
+		"512": "icons/reCaptcha-512.png"
 	},
 		"http://localhost:12345",
 	"permissions": [
