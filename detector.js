@@ -34,8 +34,8 @@ function sendSingle(n, an) {
 	let c = cropImage(img[0], w, h);
 	let body = { label: label,
 				 image: c,
-	let req = fetch('http://localhost:12345/', { method: 'POST', body: JSON.stringify(body)});
 				 answer: an };
+	let req = fetch('http://localhost:12345/', { method: 'POST', body: JSON.stringify(body)});
 	req.then(function (res) {
 		if (res.ok)
 			console.log('sent successfully');
