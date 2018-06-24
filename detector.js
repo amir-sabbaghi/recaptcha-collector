@@ -28,15 +28,10 @@ function sendSingle(n, an) {
 		console.log('image not found for tile');
 		return;
 	}
-	let style = img[0].getAttribute('style');
-	let t = parseInt(style.match(/top: *(-?\d+)%/)[1]);
-	let l = parseInt(style.match(/left: *(-?\d+)%/)[1]);
-	style = d.getAttribute('style');
+	let style = d.getAttribute('style');
 	let w = parseInt(style.match(/width: *(\d+)px/)[1]);
 	let h = parseInt(style.match(/height: *(\d+)px/)[1]);
-	let image = new Image();
-	image.src = img[0].src;
-	let c = cropImage(image, l * w / 100, t * h / 100, w, h);
+	let c = cropImage(img[0], w, h);
 	let body = { label: label,
 				 image: c,
 	let req = fetch('http://localhost:12345/', { method: 'POST', body: JSON.stringify(body)});
@@ -95,10 +90,10 @@ function isCheckbox() {
 	return true;
 }
 
-function cropImage(image, top, left, width, height) {
+function cropImage(image, width, height) {
 	var canvas = document.createElement("canvas");
 	canvas.width = width;
 	canvas.height = height;
-	canvas.getContext("2d").drawImage(image, left, top);
+	canvas.getContext("2d").drawImage(image, 0, 0);
 	return canvas.toDataURL("image/png");
 }
