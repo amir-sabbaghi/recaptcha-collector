@@ -5,6 +5,9 @@ OUTPUTS=$(patsubst %,dist/%,$(SOURCES) $(RESOURCES))
 
 all: firefox
 
+clean:
+	rm -rf dist recaptcha.zip
+
 dirs:
 	mkdir -vp dist/icons
 
@@ -23,5 +26,5 @@ dist/icons/%.png: icons/%.png
 dist/%: %
 	gpp $(GPPFLAGS) -o $@ $^
 
-.PHONY: all dirs firefox chrome build
+.PHONY: all clean dirs firefox chrome build
 
