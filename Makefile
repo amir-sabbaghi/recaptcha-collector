@@ -1,4 +1,3 @@
-GPPFLAGS+=
 SOURCES=manifest.json detector.js
 RESOURCES=icons/*.png
 OUTPUTS=$(patsubst %,dist/%,$(SOURCES) $(RESOURCES))
@@ -12,8 +11,7 @@ dirs:
 	mkdir -vp dist/icons
 
 firefox: dirs
-	GPPFLAGS+=-DTARGET_FIREFOX
-	$(MAKE) build
+	GPPFLAGS+=-DTARGET_FIREFOX $(MAKE) build
 
 chrome: dist build
 
