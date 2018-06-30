@@ -11,7 +11,7 @@ dirs:
 	mkdir -vp dist/icons
 
 firefox: dirs
-	GPPFLAGS+=-DTARGET_FIREFOX $(MAKE) build
+	GPPFLAGS+=-DTARGET_FIREFOX $(MAKE) build dist/background.js
 
 chrome: dist build
 

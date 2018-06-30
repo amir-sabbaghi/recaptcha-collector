@@ -1,6 +1,6 @@
 var label = null;
 
-document.addEventListener('mousedown', function(e) {
+function handler(e) {
     if (e.target.id == 'recaptcha-verify-button')
         sendTheRest();
     else {
@@ -9,6 +9,30 @@ document.addEventListener('mousedown', function(e) {
         else
             sendSingle(e.target, true);
     }
+}
+
+document.addEventListener('mousedown', async function(e) {
+#ifdef TARGET_FIREFOX
+    let obj = await RFP('get');
+    console.log(obj);
+    if (obj.value === false)
+        handler(e);
+    else if (obj.levelOfControl === "controlled_by_this_extension" || obj.levelOfControl === "controllable_by_this_extension") {
+        console.log("temporarily disabling fingerprinting resistance");
+        let result = await RFP('set');
+        if (result) {
+            let c = handler(e);
+            result = await RFP('clear');
+            if (!result)
+                console.log("could not revert resistFingerprinting");
+            return c;
+        }
+        else
+            console.log("could not change resistFingerprinting");
+    }
+#else
+    return handler(e);
+#endif
 }, false);
 
 function sendSingle(n, an) {
@@ -28,10 +52,7 @@ function sendSingle(n, an) {
         console.log('image not found for tile');
         return;
     }
-    let style = d.getAttribute('style');
-    let w = parseInt(style.match(/width: *(\d+)px/)[1]);
-    let h = parseInt(style.match(/height: *(\d+)px/)[1]);
-    let c = cropImage(img[0], w, h);
+    let c = cropImage(img[0]);
     let body = {
         label: label,
         image: c,
@@ -93,10 +114,20 @@ function isCheckbox() {
     return true;
 }
 
-function cropImage(image, width, height) {
+function cropImage(image) {
     var canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = image.offsetWidth;
+    canvas.height = image.offsetHeight;
     canvas.getContext("2d").drawImage(image, 0, 0);
     return canvas.toDataURL("image/png");
+}
+
+function RFP(cmd) {
+	return new Promise((resolve, reject) => {
+		var p = browser.runtime.connect();
+		p.onMessage.addListener(function (r) {
+			resolve(r);
+		});
+		p.postMessage(cmd);
+	});
 }

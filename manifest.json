@@ -8,8 +8,16 @@
 	},
 		"http://localhost:12345",
 	"permissions": [
+#ifdef TARGET_FIREFOX
+		"privacy",
+#endif
 		"webRequest"
 	],
+#ifdef TARGET_FIREFOX
+	"background": {
+		"scripts": ["background.js"]
+	},
+#endif
 	"content_scripts": [
 		{
 			"matches": ["*://www.google.com/recaptcha/api2/bframe*"],
